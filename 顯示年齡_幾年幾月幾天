@@ -1,0 +1,13 @@
+select 
+    YEAR(GETDATE()) - YEAR(convert(date ,BDATE )) -  CASE WHEN MONTH(GETDATE()) < MONTH(convert(date ,BDATE )) OR MONTH(GETDATE()) = MONTH(convert(date ,BDATE )) AND DAY(GETDATE()) < DAY(convert(date ,BDATE )) THEN 1 ELSE 0 END   age_y
+	,(YEAR(GETDATE())*12 - YEAR(convert(date ,BDATE ))*12 + MONTH(GETDATE()) - MONTH(convert(date ,BDATE )) -  CASE WHEN DAY(GETDATE()) < DAY(convert(date ,BDATE )) THEN 1 ELSE 0 END) % 12  age_m
+	,DATEDIFF(DD
+	    ,CASE WHEN DATEADD(MM,DATEDIFF(MM,convert(date ,BDATE ),GETDATE()),convert(date ,BDATE )) > GETDATE()
+						  THEN DATEADD(MM,DATEDIFF(MM,convert(date ,BDATE ),GETDATE())-1,convert(date ,BDATE ))
+					      ELSE DATEADD(MM,DATEDIFF(MM,convert(date ,BDATE ),GETDATE()),convert(date ,BDATE ))
+		END
+		,GETDATE()
+    ) age_d
+from(
+    select '20210420'  BDATE
+)temp
